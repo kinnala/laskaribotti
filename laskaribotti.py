@@ -24,27 +24,29 @@ class LaskariHandler:
                     type='stream',
                     to='etälaskarit',
                     subject='Tervetuloa etälaskareihin',
-                    content='Jos tarvitset apua, niin pääset jonoon lähettämällä minulle viestin. Paina nimeäni ja valitse "Send direct message". Vapaa assari auttaa sinua tuota pikaa!'
+                    content='Moi! Ylläpidän autettavien jonoa. Jos tarvitset apua, niin pääset jonoon lähettämällä minulle vapaamuotoisen viestin. Paina nimeäni ja valitse "Send direct message". Vapaa assari auttaa sinua tuota pikaa!'
                 ))
                 bot_handler.send_message(dict(
                     type='stream',
                     to='assarit',
                     subject='Jonotilanne',
-                    content='Ylläpidän autettavien jonoa. Saat seuraavan autettavan nimen lähettämällä minulle viestin: !seuraava'
+                    content='Moi! Ylläpidän autettavien jonoa. Saat seuraavan autettavan nimen lähettämällä minulle yksityisviestin: !seuraava'
                 ))
                 return
             elif full_content == '!seuraava':
                 if len(queue) == 0:
-                    bot_handler.send_reply(message, "Jono on tyhjä.")
+                    bot_handler.send_reply(message, "Jono on tyhjä!")
                     return
                 bot_handler.send_reply(message, "Seuraava autettava: @**{}**".format(queue[0]))
-                del queue[0]
                 bot_handler.send_message(dict(
                     type='stream',
                     to='assarit',
                     subject='Jonotilanne',
-                    content='Jonon pituus: {}'.format(len(queue))
+                    content='@**{}** auttaa käyttäjää @**{}**. Jonon pituus: {}'.format(sender,
+                                                                                        queue[0],
+                                                                                        len(queue) - 1)
                 ))
+                del queue[0]
                 return
             elif full_content == '!jono':
                 bot_handler.send_reply(message, str(queue))
@@ -56,12 +58,13 @@ class LaskariHandler:
             return
         # add to queue
         queue.append(sender)
-        bot_handler.send_reply(message, "Sinut on lisätty jonoon. Paikkasi jonossa: {}.".format(len(queue)))
+        bot_handler.send_reply(message, "Sinut on lisätty jonoon. Assari ottaa sinuun pian yhteyttä. Voit miettiä jo valmiiksi lähetätkö kysymyksestäsi esimerkiksi kuvan. Zulipissa voi kirjoittaa matemaattisia kaavoja LaTeXilla. Voit kirjoittaa LaTeXia esimerkiksi Abitin kaavaeditorin avulla (https://math-demo.abitti.fi) ja liittää sen Zulipiin. Voit myös liittää kuvakaappauksia. Paikkasi jonossa: {}.".format(len(queue)))
         bot_handler.send_message(dict(
             type='stream',
             to='assarit',
             subject='Jonotilanne',
-            content='Jonon pituus: {}'.format(len(queue))
+            content='@**{}** liittyi jonoon. Jonon pituus: {}'.format(sender,
+                                                                      len(queue))
         ))
 
 
