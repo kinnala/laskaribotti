@@ -18,7 +18,7 @@ class LaskariHandler:
 
     def handle_message(self, message, bot_handler):
         sender = message['sender_full_name']
-        uid = message['uid']
+        uid = message['sender_id']
         full_content = message['full_content']
         if full_content[0] == '!':
             if full_content == '!aloita':
